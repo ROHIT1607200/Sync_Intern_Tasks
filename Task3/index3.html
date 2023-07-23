@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-3iKBSk6Hv4IwVr3Uf2T9qk29flbKxSX53kuZr+GL73e+yLzFyP9X0P0HvzK8/gK2n8Ecc6eaz3zH9PBR4jH3A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <link rel="stylesheet" href="styles3.css" />
+    <title>Music Player</title>
+  </head>
+  <body>
+    <div class="container">
+      <header class="music-player">
+        <nav>
+          <div class="circle">
+            <i class="fa-solid fa-angle-left"></i>
+          </div>
+          <div class="circle">
+            <i class="fa-solid fa-bars"></i>
+          </div>
+        </nav>
+        
+        <img src="cover1.png" alt="" class="song-img">
+        <audio controls preload="auto" loop id="song">
+          <source src="Song1.mp3" type="audio/mpeg">
+          <source src="Song2.mp3" type="audio/mpeg">
+          <source src="Song3.mp3" type="audio/mpeg">
+          <source src="Song4.mp3" type="audio/mpeg">
+          <source src="Song5.mp3" type="audio/mpeg">
+
+        </audio>
+        <input type="range" value="0" id="progress">
+        <div class="controls">
+          <div><i class="fas fa-backward"></i></div>
+          <div onclick="playPause()"><i class="fas fa-play" id="ctrlIcon"></i></div>
+          <div><i class="fas fa-forward"></i></div>
+        </div>
+      </header>
+    </div>
+    <script>
+      let progress = document.getElementById("progress");
+      let song = document.getElementById("song");
+      let ctrlIcon = document.getElementById("ctrlIcon");
+
+      song.onloadedmetadata = function() {
+        progress.max = song.duration;
+        progress.value = song.currentTime;
+      }
+
+      function playPause() {
+        if (ctrlIcon.classList.contains("fa-pause")) {
+          song.pause();
+          ctrlIcon.classList.remove("fa-pause");
+          ctrlIcon.classList.add("fa-play");
+        } else {
+          song.play();
+          ctrlIcon.classList.add("fa-pause");
+          ctrlIcon.classList.remove("fa-play");
+        }
+      }
+      if(song.play()){
+        setInterval(()=>{
+          progress.value = song.currentTime;
+        },500);
+      }
+      progress.onchange = function(){
+       song.play();
+       song.currentTime = progress.value;
+       ctrlIcon.classList.add("fa-pause");
+        ctrlIcon.classList.remove("fa-play")
+      }
+
+      // create an array of song sources
+      let songs = ["Song1.mp3", "Song2.mp3", "Song3.mp3", "Song4.mp3", "Song5.mp3"];
+
+      // create a variable to store the current song index
+      let currentSong = 0;
+
+      // get the forward and backward buttons from the document
+      let forwardBtn = document.querySelector(".fa-forward");
+      let backwardBtn = document.querySelector(".fa-backward");
+
+      // add event listeners to the buttons
+      forwardBtn.addEventListener("click", nextSong);
+      backwardBtn.addEventListener("click", prevSong);
+
+      // define the nextSong function
+      function nextSong() {
+        // increment the current song index by one
+        currentSong++;
+
+        // if the current song index is equal to the length of the songs array, reset it to zero
+        if (currentSong == songs.length) {
+          currentSong = 0;
+        }
+
+        // change the source of the audio element to the next song in the array
+        song.src = songs[currentSong];
+
+        // update the progress bar
+        progress.value = 0;
+
+        // play the song and change the icon
+        song.play();
+        ctrlIcon.classList.remove("fa-play");
+        ctrlIcon.classList.add("fa-pause");
+      }
+
+      // define the prevSong function
+      function prevSong() {
+        // decrement the current song index by one
+        currentSong--;
+
+        // if the current song index is less than zero, set it to the last index of the songs array
+        if (currentSong < 0) {
+          currentSong = songs.length - 1;
+        }
+
+        // change the source of the audio element to the previous song in the array
+        song.src = songs[currentSong];
+
+        // update the progress bar
+        progress.value = 0;
+
+        // play the song and change the icon
+        song.play();
+        ctrlIcon.classList.remove("fa-play");
+        ctrlIcon.classList.add("fa-pause");
+      }
+    </script>
+  </body>
+</html>
+
